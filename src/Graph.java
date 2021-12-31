@@ -27,37 +27,21 @@ public class Graph {
         this.counter = g.counter;
     }
 
-    public HashMap<Integer, Node> getNodes() {
-        return nodes;
-    }
+    public HashMap<Integer, Node> getNodes() {return nodes;}
 
-    public void setNodes(HashMap<Integer, Node> nodes) {
-        this.nodes = nodes;
-    }
+    public void setNodes(HashMap<Integer, Node> nodes) {this.nodes = nodes;}
 
-    public HashMap<Integer, HashMap<Integer, Double>> getOut_edges() {
-        return out_edges;
-    }
+    public HashMap<Integer, HashMap<Integer, Double>> getOut_edges() {return out_edges;}
 
-    public void setOut_edges(HashMap<Integer, HashMap<Integer, Double>> out_edges) {
-        this.out_edges = out_edges;
-    }
+    public void setOut_edges(HashMap<Integer, HashMap<Integer, Double>> out_edges) {this.out_edges = out_edges;}
 
-    public HashMap<Integer, HashMap<Integer, Double>> getIn_edges() {
-        return in_edges;
-    }
+    public HashMap<Integer, HashMap<Integer, Double>> getIn_edges() {return in_edges;}
 
-    public void setIn_edges(HashMap<Integer, HashMap<Integer, Double>> in_edges) {
-        this.in_edges = in_edges;
-    }
+    public void setIn_edges(HashMap<Integer, HashMap<Integer, Double>> in_edges) {this.in_edges = in_edges;}
 
-    public int getCounter() {
-        return counter;
-    }
+    public int getCounter() {return counter;}
 
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
+    public void setCounter(int counter) {this.counter = counter;}
 
     // Get the Node object that has that id
     public Node getNode(int key){
@@ -93,9 +77,10 @@ public class Graph {
     }
 
     public void removeNode(int id) {
+        // if the Node exist - we will remove all his in + out edges, and then we will remove him
         if (nodes.containsKey(id)) {
-            out_edges.get(id).forEach((k, v) -> removeInEdge(k,id));
-            in_edges.get(id).forEach((k,v) -> removeOutEdge(k,id));
+            out_edges.get(id).forEach((k, v) -> removeEdge(k,id));
+            in_edges.get(id).forEach((k,v) -> removeEdge(k,id));
             out_edges.remove(id);
             in_edges.remove(id);
             nodes.remove(id);
@@ -103,18 +88,13 @@ public class Graph {
         }
     }
 
-     public void removeOutEdge(int src, int dest){
+     public void removeEdge(int src, int dest){ // remove an out edge from src to dest and an in Edge from dest to src
         if(src!=dest && nodes.containsKey(src) && nodes.containsKey(dest) && out_edges.get(src).containsKey(dest)){
             out_edges.get(src).remove(dest);
+            in_edges.get(dest).remove(src);
             counter++;
         }
      }
-    public void removeInEdge(int src, int dest) {
-        if (src != dest && nodes.containsKey(src) && nodes.containsKey(dest) && in_edges.get(src).containsKey(dest)) {
-            in_edges.get(src).remove(dest);
-            counter++;
-        }
-    }
 }
 
 

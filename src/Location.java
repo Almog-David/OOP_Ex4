@@ -21,32 +21,15 @@ public class Location {
         this.z = l.z;
     }
 
-    public double getX() {
-        return x;
-    }
+    public double getX() {return x;}
 
-    public void setX(double x) {
-        this.x = x;
-    }
+    public void setX(double x) {this.x = x;}
 
-    public double getY() {
-        return y;
-    }
+    public double getY() {return y;}
 
-    public void setY(double y) {
-        this.y = y;
-    }
+    public void setY(double y) {this.y = y;}
 
-    public double getZ() {
-        return z;
-    }
+    public double getZ() {return z;}
 
-    public void setZ(double z) {
-        this.z = z;
-    }
-
-    public double distance(Location g) {
-        double dist = Math.sqrt(Math.pow(this.x-g.x,2)+Math.pow(this.y-g.y,2)+Math.pow(this.z-g.z,2));
-        return dist;
-    }
+    public void setZ(double z) {this.z = z;}
 }

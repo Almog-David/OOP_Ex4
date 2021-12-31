@@ -11,35 +11,19 @@ public class Node {
         this.location = location;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() {return id;}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) {this.id = id;}
 
-    public double getWeight() {
-        return weight;
-    }
+    public double getWeight() {return weight;}
 
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
+    public void setWeight(double weight) {this.weight = weight;}
 
-    public int getTag() {
-        return tag;
-    }
+    public int getTag() {return tag;}
 
-    public void setTag(int tag) {
-        this.tag = tag;
-    }
+    public void setTag(int tag) {this.tag = tag;}
 
-    public Location getLocation() {
-        return location;
-    }
+    public Location getLocation() {return location;}
 
-    public void setLocation(Location location) {
-        this.location = location;
-    }
+    public void setLocation(Location location) {this.location = location;}
 }
