@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.List;
 
 public class GraphAlgo {
@@ -23,6 +24,16 @@ public class GraphAlgo {
 
     public int center(){
 
+    }
+
+    public HashMap<Integer,Node> Dijkstra(int src){
+    }
+
+    public boolean relax(int src, int dest){
+
+    }
+
+    public void reset(){
     }
 
 
