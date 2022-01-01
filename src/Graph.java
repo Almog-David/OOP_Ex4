@@ -51,13 +51,13 @@ public class Graph {
     }
 
     // Get the value of the Edge that has the source and dest
-    public Object getEdge (int src, int dest){
+    public double getEdge (int src, int dest){
         //if the values are equal or there isn't a source node - it's not a valid Edge
         if(src==dest || !nodes.containsKey(src))
-            return null;
+            return -1;
         //if there isn't a connection between the source and the destination - there isn't an Edge exist in the graph
         else if(!out_edges.get(src).containsKey(dest))
-            return null;
+            return -1;
         return out_edges.get(src).get(dest);
     }
     public void addNode(int id, Location location){
