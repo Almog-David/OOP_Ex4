@@ -53,7 +53,7 @@ public class Agent {
 
     public Queue<Integer> getPath() {return path;}
 
-    public void setPath(Queue<Integer> path) {this.path = path;}
+    public void setPath(LinkedList<Integer> path) {this.path = path;}
 
     public static LinkedList<Agent> load(String file) {
         LinkedList<Agent> agents;
