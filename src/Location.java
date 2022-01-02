@@ -4,9 +4,9 @@ public class Location {
     public double z;
 
     public Location() {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
     }
 
     public Location(double x, double y, double z) {

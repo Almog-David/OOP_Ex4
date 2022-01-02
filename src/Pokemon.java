@@ -1,4 +1,14 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class Pokemon {
@@ -29,6 +39,33 @@ public class Pokemon {
     public boolean isCaptured() {return captured;}
 
     public void setCaptured(boolean captured) {this.captured = captured;}
+
+    public static Queue<Pokemon> load(String file) {
+        LinkedList<Pokemon> pokemons;
+        try {
+            pokemons = new LinkedList<Pokemon>();
+            Object o = new JSONParser().parse(new FileReader(file));
+            JSONObject jo = (JSONObject) o; // typecasting obj to JSONObject
+            JSONArray Agent = (JSONArray) jo.get("Pokemons"); // reading the Agents from json
+            Iterator a = Agent.iterator();
+            while (a.hasNext()) {
+                HashMap<String, Object> map = (HashMap<String, Object>) a.next();
+                double v = (double) map.get("value");
+                int t = (int) map.get("type");
+                String p = (String) map.get("pos");
+                String[] position = p.split(",");
+                Location l = new Location(Double.parseDouble(position[0])
+                        , Double.parseDouble(position[1])
+                        , Double.parseDouble(position[2]));
+                pokemons.add(new Pokemon(v,t,l));
+            }
+        } catch (IOException e1) {
+            return null;
+        } catch (ParseException e2) {
+            return null;
+        }
+        return pokemons;
+    }
 
     public int [] findEdge(Graph g) {
         Location C = this.pos; // The pokemon Location

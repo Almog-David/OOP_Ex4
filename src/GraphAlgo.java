@@ -1,53 +1,92 @@
-import com.google.gson.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class GraphAlgo {
     private Graph graph;
 
-    private GraphAlgo() {this.graph = new Graph();}
+    public GraphAlgo() {this.graph = new Graph();}
     public GraphAlgo(Graph graph) {this.graph = graph;}
 
     public Graph getGraph() {return graph;}
 
-    public void setGraph(Graph graph) {this.graph = graph;}
+    public void init(Graph graph) {this.graph = graph;}
 
     public boolean save(String file) { // need to fix save
+        JSONObject ans=new JSONObject(); //creating a json object
+        JSONArray edges=new JSONArray(); // creating an array in order to save the Edges information
+        JSONArray nodes=new JSONArray(); // creating an array in order to save the Nodes information
+        Iterator<Map.Entry<Integer, HashMap<Integer, Double>>> source = this.graph.getOut_edges().entrySet().iterator();
+        while (source.hasNext()) {
+            Map.Entry<Integer, HashMap<Integer, Double>> first = source.next();
+            int src = first.getKey();
+            Iterator<Map.Entry<Integer, Double>> destination = this.graph.getOut_edges().get(src).entrySet().iterator();
+            while (destination.hasNext()) {
+                Map.Entry<Integer, Double> second = destination.next();
+                int dest = second.getKey();
+                JSONObject edge = new JSONObject();
+                edge.put("src", src);
+                edge.put("w", this.graph.getEdge(src,dest));
+                edge.put("dest", dest);
+                edges.add(edge);
+            }
+        }
+            Iterator<Map.Entry<Integer, Node>> iterNodes = this.graph.getNodes().entrySet().iterator();
+            while (iterNodes.hasNext()) {
+                Map.Entry<Integer, Node> v = iterNodes.next();
+                JSONObject vertex=new JSONObject();
+                vertex.put("pos",v.getValue().getLocation().toString());
+                vertex.put("id",v.getKey());
+            }
+            ans.put("Edges",edges);
+            ans.put("Nodes",nodes);
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(ans.toJSONString());
+                writer.flush();
+                return true;
+            }
+            catch (IOException e) { return false;}
+        }
 
+    public boolean load(String file) {
         try {
-            GsonBuilder gson =new GsonBuilder();
-            gson.registerTypeAdapter(Graph.class, new Graph());
-            Gson g= gson.create();
-            PrintWriter gFile=new PrintWriter(new File(file));
-            gFile.write(g.toJson(graph));
-            gFile.close();
+            Graph g = new Graph();
+            Object obj = new JSONParser().parse(new FileReader(file)); // parsing the file
+            JSONObject jo = (JSONObject) obj; // typecasting obj to JSONObject
+            JSONArray nodes = (JSONArray) jo.get("Nodes"); // reading the Nodes from json
+            Iterator i = nodes.iterator();
+            while (i.hasNext()) {
+                HashMap<String, Object> map = (HashMap<String, Object>) i.next();
+                String pos = (String) map.get("pos");
+                int id = (int) ((long) map.get("id"));
+                String[] position = pos.split(",");
+                Location l = new Location(Double.parseDouble(position[0])
+                        , Double.parseDouble(position[1])
+                        , Double.parseDouble(position[2]));
+                g.addNode(id, l);
+            }
+            JSONArray edges = (JSONArray) jo.get("Edges"); //reading the edges
+            i = edges.iterator();
+            while (i.hasNext()) {
+                HashMap<String, Object> map = (HashMap<String, Object>) i.next();
+                int src = (int) (long) map.get("src");
+                int dest = (int) (long) map.get("dest");
+                double w = (double) map.get("w");
+                g.addEdge(src, dest, w);
+            }
+            this.init(g);
             return true;
+        } catch (IOException e1) {
+            return false;
+        } catch (ParseException e2) {
+            return false;
         }
-        catch (FileNotFoundException e)
-        {
-            System.out.println("can't write the graph to a file ");
-            e.printStackTrace();
-        }
-        return false;
     }
 
-    public boolean load(String file) { // need to fix load
-
-        try {
-            GsonBuilder builder=new GsonBuilder();
-            builder.registerTypeAdapter(Graph.class, new Graph().DWGraph_DSJson());
-            Gson gson=builder.create();
-            BufferedReader gFile=new BufferedReader(new FileReader(file));
-            directed_weighted_graph g=gson.fromJson(gFile,DWGraph_DS.class);
-            init(g);
-            return true;
-        }
-        catch (FileNotFoundException e)
-        {
-            System.out.println("can't read the graph from the file");
-            e.printStackTrace();
-        }
-        return false;
-    }
     public List<Integer> shortestPath(int src, int dest){
         HashMap<Integer, Node> D = Dijkstra(src);
         List<Integer> ans = new LinkedList<>();
@@ -86,7 +125,7 @@ public class GraphAlgo {
         return Collections.min(ans.entrySet(), Map.Entry.comparingByValue()).getKey();
     }
 
-    public HashMap<Integer,Node> Dijkstra(int src) {
+    private HashMap<Integer,Node> Dijkstra(int src) {
         reset(); // reset the nodes information
         HashMap<Integer, Node> previous = new HashMap<>(); // save the node previous pointer
         Queue<Node> neighbours = new PriorityQueue<>((v1, v2) -> (int) (v1.getWeight() - v2.getWeight()));
@@ -116,7 +155,7 @@ public class GraphAlgo {
         return previous;
     }
 
-    public boolean relax(int src, int dest){
+    private boolean relax(int src, int dest){
         Node s = this.graph.getNode(src);
         Node d = this.graph.getNode(dest);
         double e = this.graph.getEdge(src, dest);
@@ -127,7 +166,7 @@ public class GraphAlgo {
         return true;
     }
 
-    public void reset(){
+    private void reset(){
         for (HashMap.Entry<Integer, Node> set : this.graph.getNodes().entrySet()){
             set.getValue().setTag(0);
             set.getValue().setWeight(Double.MAX_VALUE);

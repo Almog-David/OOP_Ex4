@@ -85,10 +85,12 @@ public class Graph {
     public void removeNode(int id) {
         // if the Node exist - we will remove all his in + out edges, and then we will remove him
         if (nodes.containsKey(id)) {
-            out_edges.get(id).forEach((k, v) -> removeEdge(k,id));
-            in_edges.get(id).forEach((k,v) -> removeEdge(k,id));
-            out_edges.remove(id);
-            in_edges.remove(id);
+            if(out_edges.containsKey(id) && in_edges.containsKey(id)) {
+                out_edges.get(id).forEach((k, v) -> removeEdge(k, id));
+                in_edges.get(id).forEach((k, v) -> removeEdge(k, id));
+                out_edges.remove(id);
+                in_edges.remove(id);
+            }
             nodes.remove(id);
             counter++;
         }

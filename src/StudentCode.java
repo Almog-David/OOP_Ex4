@@ -15,15 +15,16 @@ public class StudentCode {
         }
         String graphStr = client.getGraph();
         System.out.println(graphStr); // we need to upload the string graph in order to create a new graph
-        GraphAlgo graph = load(graphStr); // i added in order to save the graph.
+        GraphAlgo graph = new GraphAlgo(); // i added in order to save the graph.
+        graph.load(graphStr);
         client.addAgent("{\"id\":0}");
         String agentsStr = client.getAgents();
         System.out.println(agentsStr); // we need to upload the string of the agents and save it in some kind of list
-        Agent [] agents = load(agentsStr); // i added in order to save the agents. array because we don't add an agent in the middle
+        LinkedList <Agent> agents = Agent.load(agentsStr); // i added in order to save the agents. array because we don't add an agent in the middle
         String pokemonsStr = client.getPokemons();
         System.out.println(pokemonsStr); // the same in here
         Queue<Pokemon> pokemons = new PriorityQueue<>((v1, v2) -> (int) (v1.getValue() - v2.getValue()));
-        pokemons = load(pokemonsStr); // add the pokemons to a queue because every time we need to add and remove the pokemon if we reach to him
+        pokemons = Pokemon.load(pokemonsStr); // add the pokemons to a queue because every time we need to add and remove the pokemon if we reach to him
         String isRunningStr = client.isRunning();
         System.out.println(isRunningStr);
         // BEFORE THE START WE NEED TO ALLOCATE THE AGENTS IN A POSITION
@@ -46,12 +47,12 @@ public class StudentCode {
 
     }
 
-    public void CatchPokemon(){
-        List path;
+    public void CatchPokemon(GraphAlgo graph, LinkedList<Agent> agents,Queue<Pokemon> pokemons){
+        Queue path = new LinkedList();
         double min = Double.MAX_VALUE;
-        int AgentID;
-        for (Pokemon p : pokemons){
-            int[] P_pos = p.findEdge(graph);
+        int AgentID = 0;
+        for (Pokemon p :pokemons){
+            int[] P_pos = p.findEdge(graph.getGraph());
             if(p.isCaptured()==false){
                 for(Agent a : agents){
                     if (a.getSource()==-1){
