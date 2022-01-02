@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Agent {
     private int id;
     private double value;
@@ -5,6 +8,7 @@ public class Agent {
     private int dest;
     private double speed;
     private Location pos;
+    private Queue<Integer> path; // in path we will save the path of the agent
 
     public Agent(int id, double value, int source, int dest, double speed, Location pos) {
         this.id = id;
@@ -13,6 +17,7 @@ public class Agent {
         this.dest = dest;
         this.speed = speed;
         this.pos = pos;
+        this.path = new LinkedList<Integer>();
     }
 
     public int getId() {return id;}
@@ -38,5 +43,16 @@ public class Agent {
     public Location getPos() {return pos;}
 
     public void setPos(Location pos) {this.pos = pos;}
+
+    public Queue<Integer> getPath() {return path;}
+
+    public void setPath(Queue<Integer> path) {this.path = path;}
+
+    public void allocateAgents (GraphAlgo g){ // at the beginning of the game we put all the agents in the center
+        int center = g.center();
+        this.setSource(center);
+    }
+
+
 }
 

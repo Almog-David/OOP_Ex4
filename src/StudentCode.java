@@ -14,18 +14,21 @@ public class StudentCode {
             e.printStackTrace();
         }
         String graphStr = client.getGraph();
-        System.out.println(graphStr);
+        System.out.println(graphStr); // we need to upload the string graph in order to create a new graph
+        GraphAlgo g = load(graphStr);
         client.addAgent("{\"id\":0}");
         String agentsStr = client.getAgents();
-        System.out.println(agentsStr);
+        System.out.println(agentsStr); // we need to upload the string of the agents and save it in some kind of list
         String pokemonsStr = client.getPokemons();
-        System.out.println(pokemonsStr);
+        System.out.println(pokemonsStr); // the same in here
         String isRunningStr = client.isRunning();
         System.out.println(isRunningStr);
+        // BEFORE THE START WE NEED TO ALLOCATE THE AGENTS IN A POSITION
+
 
         client.start();
 
-        while (client.isRunning().equals("true")) {
+        while (client.isRunning().equals("true")) { // we need to update this
             client.move();
             System.out.println(client.getAgents());
             System.out.println(client.timeToEnd());
@@ -36,6 +39,9 @@ public class StudentCode {
             client.chooseNextEdge("{\"agent_id\":0, \"next_node_id\": " + next + "}");
 
         }
+
     }
+
+
 
 }

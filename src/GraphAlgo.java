@@ -1,3 +1,4 @@
+import com.google.gson.*;
 import java.util.*;
 
 public class GraphAlgo {
@@ -10,18 +11,43 @@ public class GraphAlgo {
 
     public void setGraph(Graph graph) {this.graph = graph;}
 
-    public boolean save(String file){
+    public boolean save(String file) { // need to fix save
 
-    }
-
-    public boolean load(String file){
-        try{
-
+        try {
+            GsonBuilder gson =new GsonBuilder();
+            gson.registerTypeAdapter(Graph.class, new Graph());
+            Gson g= gson.create();
+            PrintWriter gFile=new PrintWriter(new File(file));
+            gFile.write(g.toJson(graph));
+            gFile.close();
+            return true;
         }
-
-
+        catch (FileNotFoundException e)
+        {
+            System.out.println("can't write the graph to a file ");
+            e.printStackTrace();
+        }
+        return false;
     }
 
+    public boolean load(String file) { // need to fix load
+
+        try {
+            GsonBuilder builder=new GsonBuilder();
+            builder.registerTypeAdapter(Graph.class, new Graph().DWGraph_DSJson());
+            Gson gson=builder.create();
+            BufferedReader gFile=new BufferedReader(new FileReader(file));
+            directed_weighted_graph g=gson.fromJson(gFile,DWGraph_DS.class);
+            init(g);
+            return true;
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println("can't read the graph from the file");
+            e.printStackTrace();
+        }
+        return false;
+    }
     public List<Integer> shortestPath(int src, int dest){
         HashMap<Integer, Node> D = Dijkstra(src);
         List<Integer> ans = new LinkedList<>();

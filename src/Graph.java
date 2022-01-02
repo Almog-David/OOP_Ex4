@@ -60,6 +60,7 @@ public class Graph {
             return -1;
         return out_edges.get(src).get(dest);
     }
+
     public void addNode(int id, Location location){
         if(!nodes.containsKey(id)) { // if the Node doesn't exist - we will add him. if he exists - continue
             nodes.put(id, new Node(id, location));
@@ -68,9 +69,14 @@ public class Graph {
             counter++;
         }
     }
+
     public void addEdge(int src, int dest, double w){
         if(src!=dest && nodes.containsKey(src) && nodes.containsKey(dest)){ // if the Edge doesn't exist - we will add him. if he exists - continue
+            if(!out_edges.containsKey(src))
+                out_edges.put(src,new HashMap<>());
             out_edges.get(src).put(dest,w);
+            if(!in_edges.containsKey(dest))
+                in_edges.put(dest,new HashMap<>());
             in_edges.get(dest).put(src,w);
             counter++;
         }
