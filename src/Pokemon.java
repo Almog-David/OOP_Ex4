@@ -91,3 +91,4 @@ public class Pokemon {
         return Math.sqrt(Math.abs(f.getX()-s.getX())+ Math.sqrt(f.getY()-s.getY()));
     }
 }
+
