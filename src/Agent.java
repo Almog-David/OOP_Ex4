@@ -84,12 +84,5 @@ public class Agent {
         }
         return agents;
     }
-
-    public void allocateAgents (GraphAlgo g){ // at the beginning of the game we put all the agents in the center
-        int center = g.center();
-        this.setSource(center);
-    }
-
-
 }
 
