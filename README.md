@@ -8,7 +8,7 @@ This task is about creating a server game, using the Design and implementation o
 
 1. Firstly clone the project:
 ```bash
-git clone https://github.com/RoniPick/Ex3_OOP.git
+git clone https://github.com/Almog-David/OOP_Ex4.git
 ```
 2. Install the dependencies:
 ```bash
