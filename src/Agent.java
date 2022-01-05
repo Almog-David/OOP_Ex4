@@ -1,5 +1,3 @@
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,7 +13,7 @@ public class Agent {
     private int dest;
     private double speed;
     private Location pos;
-    private Queue<Integer> path; // in path we will save the path of the agent
+    private LinkedList<Integer> path; // in path we will save the path of the agent
 
     public Agent(int id, double value, int source, int dest, double speed, Location pos) {
         this.id = id;
@@ -27,60 +25,79 @@ public class Agent {
         this.path = new LinkedList<Integer>();
     }
 
-    public int getId() {return id;}
+    public int getId() {
+        return id;
+    }
 
-    public void setId(int id) {this.id = id;}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public double getValue() {return value;}
+    public double getValue() {
+        return value;
+    }
 
-    public void setValue(double value) {this.value = value;}
+    public void setValue(double value) {
+        this.value = value;
+    }
 
-    public int getSource() {return source;}
+    public int getSource() {
+        return source;
+    }
 
-    public void setSource(int source) {this.source = source;}
+    public void setSource(int source) {
+        this.source = source;
+    }
 
-    public int getDest() {return dest;}
+    public int getDest() {
+        return dest;
+    }
 
-    public void setDest(int dest) {this.dest = dest;}
+    public void setDest(int dest) {
+        this.dest = dest;
+    }
 
-    public double getSpeed() {return speed;}
+    public double getSpeed() {
+        return speed;
+    }
 
-    public void setSpeed(double speed) {this.speed = speed;}
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
 
-    public Location getPos() {return pos;}
+    public Location getPos() {
+        return pos;
+    }
 
-    public void setPos(Location pos) {this.pos = pos;}
+    public void setPos(Location pos) {
+        this.pos = pos;
+    }
 
-    public Queue<Integer> getPath() {return path;}
+    public Queue<Integer> getPath() {
+        return path;
+    }
 
-    public void setPath(LinkedList<Integer> path) {this.path = path;}
+    public void setPath(LinkedList<Integer> path) {
+        this.path = path;
+    }
 
     public static LinkedList<Agent> load(String file) {
-        LinkedList<Agent> agents;
-        try {
-            agents = new LinkedList<Agent>();
-            Object obj = new JSONParser().parse(new FileReader(file)); // parsing the file
-            JSONObject jo = (JSONObject) obj; // typecasting obj to JSONObject
-            JSONArray Agent = (JSONArray) jo.get("Agents"); // reading the Agents from json
-            Iterator a = Agent.iterator();
-            while (a.hasNext()) {
-                HashMap<String, Object> map = (HashMap<String, Object>) a.next();
-                int id = (int) map.get("id");
-                double value = (double) map.get("value");
-                int src = (int) map.get("src");
-                int dest = (int) map.get("dest");
-                double speed = (double) map.get("speed");
-                String pos = (String) map.get("pos");
-                String[] position = pos.split(",");
-                Location l = new Location(Double.parseDouble(position[0])
-                        , Double.parseDouble(position[1])
-                        , Double.parseDouble(position[2]));
-                agents.add(new Agent(id, value, src, dest, speed, l));
-            }
-        } catch (IOException e1) {
-            return null;
-        } catch (ParseException e2) {
-            return null;
+        LinkedList<Agent> agents = new LinkedList<>();
+        org.json.JSONObject o = new org.json.JSONObject(file);
+        org.json.JSONArray pk = o.getJSONArray("Agents");
+        for (int i = 0; i < pk.length(); i++) {
+            org.json.JSONObject agent = pk.getJSONObject(i).getJSONObject("Agent");
+            int id = agent.getInt("id");
+            double value = agent.getDouble("value");
+            int src = agent.getInt("src");
+            int dest = agent.getInt("dest");
+            double speed = agent.getDouble("speed");
+            String pos = agent.getString("pos");
+            String[] position = pos.split(",");
+            Location l = new Location(Double.parseDouble(position[0])
+                    , Double.parseDouble(position[1])
+                    , Double.parseDouble(position[2]));
+            agents.add(new Agent(id, value, src, dest, speed, l));
         }
         return agents;
     }

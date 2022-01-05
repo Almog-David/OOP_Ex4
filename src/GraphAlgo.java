@@ -55,7 +55,7 @@ public class GraphAlgo {
     public boolean load(String file) {
         try {
             Graph g = new Graph();
-            Object obj = new JSONParser().parse(new FileReader(file)); // parsing the file
+            Object obj = new JSONParser().parse(file); // parsing the file
             JSONObject jo = (JSONObject) obj; // typecasting obj to JSONObject
             JSONArray nodes = (JSONArray) jo.get("Nodes"); // reading the Nodes from json
             Iterator i = nodes.iterator();
@@ -80,9 +80,8 @@ public class GraphAlgo {
             }
             this.init(g);
             return true;
-        } catch (IOException e1) {
-            return false;
-        } catch (ParseException e2) {
+        }
+        catch (Exception e1) {
             return false;
         }
     }
