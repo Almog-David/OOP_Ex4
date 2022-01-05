@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public class GUI {
 
-    public static void main(String[] args) {
+    public static void main() {
         Client C = new Client();
         GraphAlgo g = new GraphAlgo();
         //---- first we need to create the settings of the frame ----//

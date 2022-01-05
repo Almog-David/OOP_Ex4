@@ -14,9 +14,7 @@ public class StudentCode {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // we get the graph from the client and upload it to an Graph object //
-        String graphStr = client.getGraph();
-        //System.out.println(graphStr); // we need to upload the string graph in order to create a new graph
+        // we get the graph from the client and upload it to a Graph object //
         GraphAlgo graph = new GraphAlgo(); // i added in order to save the graph.
         graph.load(client.getGraph());
 
@@ -31,24 +29,17 @@ public class StudentCode {
             client.addAgent("{\"id\":" + center + "}");
         }
 
-        String agentsStr = client.getAgents();
-        System.out.println(agentsStr);
-        HashMap<Integer, Agent> agents = Agent.load(agentsStr);
+        HashMap<Integer, Agent> agents = Agent.load(client.getAgents());
 
         // we get the number of pokemons from the client and create a new agents according to the information //
-        String pokemonsStr = client.getPokemons();
-        System.out.println(pokemonsStr); // the same in here
         Queue<Pokemon> pokemons = new PriorityQueue<Pokemon>((v1, v2) -> (int) (v1.getValue() - v2.getValue()));
-        pokemons = Pokemon.load(pokemonsStr); // add the pokemons to a queue because every time we need to add and remove the pokemon if we reach to him
-        String isRunningStr = client.isRunning();
+        pokemons = Pokemon.load(client.getPokemons()); // add the pokemons to a queue because every time we need to add and remove the pokemon if we reach to him
 
         client.start();
 
         while (client.isRunning().equals("true")) {
-            agentsStr = client.getAgents();
-            agents = Agent.load(agentsStr);
-            pokemonsStr = client.getPokemons();
-            pokemons = Pokemon.load(pokemonsStr);
+            agents = Agent.load(client.getAgents());
+            pokemons = Pokemon.load(client.getPokemons());
             LinkedList path = new LinkedList();
             double min = Double.MAX_VALUE;
             int AgentID = -1;
@@ -74,18 +65,30 @@ public class StudentCode {
                     else if(path.size()==1 && agents.get(AgentID).getSource()==  P_pos[0] )
                         client.chooseNextEdge("{\"agent_id\":" + AgentID + ", \"next_node_id\": " + P_pos[1] + "}");
 
-                    //System.out.println(agentsStr);
                     agents.get(AgentID).setTag(true);
                 }
 
             }
+            System.out.println(client.getAgents());
+
+            MyThread thread = new MyThread();
+            thread.run();
+            try {
+                thread.sleep(100);
+            } catch(InterruptedException e) {
+                if(true==true);
+            }
+
             client.move();
-            info = client.getInfo();
-            o = new org.json.JSONObject(info);
-            ob = o.getJSONObject("GameServer");
-            int value = ob.getInt("grade");
-            int moves = ob.getInt("moves");
-            System.out.println(""+ value +" , "+ moves + "");
+
+
         }
+    }
+}
+
+class MyThread extends Thread {
+    @Override
+    public void run(){
+        return;
     }
 }
