@@ -62,6 +62,7 @@ public class Pokemon {
 
 
     public int [] findEdge(Graph g) {
+        double epsilon = 0.00000001;
         Location C = this.pos; // The pokemon Location
         int[] ans = new int[2];
         for (HashMap.Entry<Integer, Node> s : g.getNodes().entrySet()) {
@@ -70,7 +71,13 @@ public class Pokemon {
                 Node second = g.getNode(d.getKey());
                 Location A = first.getLocation();
                 Location B = second.getLocation();
-                if (distance(A, C) + distance(B, C) == distance(A, B)) {
+                double ax = A.getX();
+                double ay = A.getY();
+                double bx = B.getX();
+                double by = B.getY();
+                double m = (by-ay)/(bx-ax);
+                double n = by - m*bx;
+                if (C.y - m*C.x - n < epsilon  && -1* epsilon < C.y - m*C.x - n ) {
                     if (this.type < 0 && first.getId() - second.getId() > 0) // if the source is bigger than the dest - the pokemon type is -1
                         ans = new int[]{first.getId(), second.getId()};
                     if (this.type > 0 && first.getId() - second.getId() < 0) // if the dest is bigger than the source - the pokemon type is 1
@@ -82,7 +89,8 @@ public class Pokemon {
     }
 
     public double distance(Location f,Location s){
-        return Math.sqrt(Math.abs(f.getX()-s.getX())+ Math.sqrt(f.getY()-s.getY()));
+        return Math.sqrt(Math.pow(f.getX()-s.getX(),2)+ Math.pow(f.getY()-s.getY(),2));
+
     }
 }
 

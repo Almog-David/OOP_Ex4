@@ -13,7 +13,7 @@ public class Agent {
     private int dest;
     private double speed;
     private Location pos;
-    private LinkedList<Integer> path; // in path we will save the path of the agent
+    private boolean tag;
 
     public Agent(int id, double value, int source, int dest, double speed, Location pos) {
         this.id = id;
@@ -22,7 +22,7 @@ public class Agent {
         this.dest = dest;
         this.speed = speed;
         this.pos = pos;
-        this.path = new LinkedList<Integer>();
+        this.tag = false;
     }
 
     public int getId() {
@@ -73,16 +73,17 @@ public class Agent {
         this.pos = pos;
     }
 
-    public Queue<Integer> getPath() {
-        return path;
+    public boolean isTag() {
+        return tag;
     }
 
-    public void setPath(LinkedList<Integer> path) {
-        this.path = path;
+    public void setTag(boolean tag) {
+        this.tag = tag;
     }
 
-    public static LinkedList<Agent> load(String file) {
-        LinkedList<Agent> agents = new LinkedList<>();
+
+    public static HashMap<Integer,Agent> load(String file) {
+        HashMap<Integer,Agent> agents = new HashMap<>();
         org.json.JSONObject o = new org.json.JSONObject(file);
         org.json.JSONArray pk = o.getJSONArray("Agents");
         for (int i = 0; i < pk.length(); i++) {
@@ -97,7 +98,7 @@ public class Agent {
             Location l = new Location(Double.parseDouble(position[0])
                     , Double.parseDouble(position[1])
                     , Double.parseDouble(position[2]));
-            agents.add(new Agent(id, value, src, dest, speed, l));
+            agents.put(id,new Agent(id, value, src, dest, speed, l));
         }
         return agents;
     }

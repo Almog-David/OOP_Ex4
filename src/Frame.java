@@ -1,12 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Frame extends JLabel{
-    LinkedList<Agent> agents; // a list of all the agents
+    HashMap<Integer, Agent> agents; // a list of all the agents
     Queue<Pokemon> pokemons; // the queue of all the pokemons
     int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2;
     int HEIGHT =(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2;
@@ -115,9 +116,10 @@ public class Frame extends JLabel{
             drawpokemon(graphics,x,y);
         }
         agents = Agent.load(client.getAgents());
-        Iterator<Agent> agn = agents.iterator();
-        while (agn.hasNext()){
-            Agent a = agn.next();
+        Iterator<HashMap.Entry<Integer, Agent>> A = agents.entrySet().iterator();
+        while (A.hasNext()) {
+            HashMap.Entry<Integer, Agent> v = A.next();
+            Agent a = v.getValue();
             int x = (int) a.getPos().x;
             int y = (int) a.getPos().y;
             drawAgents(graphics,x,y,a.getId());

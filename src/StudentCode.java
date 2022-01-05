@@ -33,9 +33,7 @@ public class StudentCode {
 
         String agentsStr = client.getAgents();
         System.out.println(agentsStr);
-        LinkedList<Agent> agents = new LinkedList<>();
-        agents = Agent.load(agentsStr);
-
+        HashMap<Integer, Agent> agents = Agent.load(agentsStr);
 
         // we get the number of pokemons from the client and create a new agents according to the information //
         String pokemonsStr = client.getPokemons();
@@ -43,60 +41,51 @@ public class StudentCode {
         Queue<Pokemon> pokemons = new PriorityQueue<Pokemon>((v1, v2) -> (int) (v1.getValue() - v2.getValue()));
         pokemons = Pokemon.load(pokemonsStr); // add the pokemons to a queue because every time we need to add and remove the pokemon if we reach to him
         String isRunningStr = client.isRunning();
-        //System.out.println(isRunningStr);
 
         client.start();
 
         while (client.isRunning().equals("true")) {
-            //graph.load(client.getGraph());
+            agentsStr = client.getAgents();
             agents = Agent.load(agentsStr);
+            pokemonsStr = client.getPokemons();
             pokemons = Pokemon.load(pokemonsStr);
-            CatchPokemon(graph, agents, pokemons);
-            for (int i = 0; i < agents.size(); i++) {
-                Agent a = agents.get(i);
-                if (a.getPath().size() > 0) {
-                    if (a.getDest() == -1) {
-                        a.getPath().remove();
-                        System.out.println(a.getPath());
-                        client.chooseNextEdge("{\"agent_id\":" + a.getId() + ", \"next_node_id\": " + a.getPath().peek() + "}");
-                        client.move();
-//                        System.out.println("{\"agent_id\":" + a.getId() + ", \"next_node_id\": " + a.getPath().peek() + "}");
-                    }
-                }
-            }
-            client.move();
-//            System.out.println(client.getAgents());
-//            System.out.println(client.timeToEnd());
-
-
-        }
-    }
-
-
-    public static void CatchPokemon(GraphAlgo graph, LinkedList<Agent> agents,Queue<Pokemon> pokemons){
-        LinkedList path = new LinkedList();
-        double min = Double.MAX_VALUE;
-        int AgentID = -1;
-        for (Pokemon p :pokemons){
-            int[] P_pos = p.findEdge(graph.getGraph());
-            if(!p.isCaptured()) {
-                for (Agent a : agents) {
-                    if (a.getDest() == -1 && a.getPath().size() == 0) { // if the agents isn't moving, and he doesn't have a path to go to
-                        List<Integer> l = graph.shortestPath(a.getSource(), P_pos[0]); // do the shortest path on it
-                        double temp = graph.calculateLength(l) / a.getSpeed(); // calculate the amount o time it will take him to execute the catch
+            LinkedList path = new LinkedList();
+            double min = Double.MAX_VALUE;
+            int AgentID = -1;
+            for (Pokemon p : pokemons) { // we will go through the poekmons we got to see which agents is best for every one.
+                int[] P_pos = p.findEdge(graph.getGraph());
+                Iterator<HashMap.Entry<Integer, Agent>> A = agents.entrySet().iterator();
+                while (A.hasNext()) {
+                    HashMap.Entry<Integer, Agent> v = A.next();
+                    if (v.getValue().isTag() == false && v.getValue().getDest() == -1) {
+                        List<Integer> l = graph.shortestPath(v.getValue().getSource(), P_pos[0]); // do the shortest path on it
+                        double temp = graph.calculateLength(l) / v.getValue().getSpeed(); // calculate the amount o time it will take him to execute the catch
                         if (temp < min) {
                             min = temp;
-                            AgentID = a.getId();
+                            AgentID = v.getValue().getId();
                             path = (LinkedList) l;
                         }
                     }
                 }
+
                 if (AgentID != -1) {
-                    path.add(P_pos[1]);// add the last node of the edge to the path in order to fully go on the edge of the pokemon.
-                    agents.get(AgentID).setPath(path);
-                    p.setCaptured(true);
+                    if(path.size()>1)
+                        client.chooseNextEdge("{\"agent_id\":" + AgentID + ", \"next_node_id\": " + path.get(1) + "}");
+                    else if(path.size()==1 && agents.get(AgentID).getSource()==  P_pos[0] )
+                        client.chooseNextEdge("{\"agent_id\":" + AgentID + ", \"next_node_id\": " + P_pos[1] + "}");
+
+                    //System.out.println(agentsStr);
+                    agents.get(AgentID).setTag(true);
                 }
+
             }
+            client.move();
+            info = client.getInfo();
+            o = new org.json.JSONObject(info);
+            ob = o.getJSONObject("GameServer");
+            int value = ob.getInt("grade");
+            int moves = ob.getInt("moves");
+            System.out.println(""+ value +" , "+ moves + "");
         }
     }
 }
