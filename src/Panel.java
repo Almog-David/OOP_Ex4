@@ -3,10 +3,9 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Queue;
 
-public class Frame extends JLabel{
+public class Panel extends JLabel{
     HashMap<Integer, Agent> agents; // a list of all the agents
     Queue<Pokemon> pokemons; // the queue of all the pokemons
     int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2;
@@ -18,9 +17,9 @@ public class Frame extends JLabel{
     Graph g = new Graph();
     Client client;
 
-    public Frame(){}
+    public Panel(){}
 
-    public Frame(Graph graph){
+    public Panel(Graph graph){
         Graph g = new Graph(graph);
         this.setLayout(new BorderLayout());
         this.setBackground(Color.WHITE);
@@ -155,47 +154,12 @@ public class Frame extends JLabel{
         g.fillOval(x-4,y-4,10,10);
         g.setColor(new Color(180, 250, 250));
         g.drawString(""+id,x,y+15);
+        repaint();
     }
 
     public void drawpokemon(Graphics g, int x, int y){
         g.fillOval(x-4,y-4,10,10);
         g.setColor(new Color(200, 200, 0));
+        repaint();
     }
 }
-
-
-//
-//        //---- first we need to create the settings of the frame ----//
-//        JFrame frame = new JFrame(); // creates a frame
-//        frame.setTitle("Ex4 - Pokemon Game"); // sets title of frame
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
-//        frame.setSize(600, 600); // sets the x and y dimension of the frame
-//        frame.setLayout(new BorderLayout());
-//        frame.setVisible(true); // make frame visible
-//        frame.getContentPane().setBackground(Color.white); // change the color of the background
-//
-//        // if we would like to change the icon of the program - use lines 20-21
-//        ImageIcon image = new ImageIcon("name of image"); // create an ImageIcon
-//        frame.setIconImage(image.getImage()); // change icon of frame
-//
-//        // ---- now we would like to create the objects on the frame ---- //
-//
-//        JLabel score = new JLabel("Score:"); // create a label and set the text
-//        //score.setHorizontalTextPosition(JLabel.LEFT); // set the x position of the label Left,center,right
-//        //score.setVerticalTextPosition(JLabel.CENTER); // set the y position of the label top,center,bottom
-//        score.setForeground(Color.darkGray); // sets the color of the label
-//        score.setFont(new Font("Ariel", Font.PLAIN, 20)); // sets font of text
-//        score.setBounds(15, 150, 350, 350); // set x, y position within frame as well as dimension
-//
-//        JLabel time = new JLabel("Time:"); // create a label and set the text
-//        //time.setHorizontalTextPosition(JLabel.LEFT); // set the x position of the label Left,center,right
-//        //time.setVerticalTextPosition(JLabel.CENTER); // set the y position of the label top,center,bottom
-//        time.setForeground(Color.darkGray); // sets the color of the label
-//        time.setFont(new Font("Ariel", Font.PLAIN, 20)); // sets font of text
-//        time.setBounds(15, 300, 350, 350); // set x, y position within frame as well as dimension
-//
-//        JButton stop = new JButton(); // create a new button
-//        stop.setBounds(100, 100, 200, 100); // set the bounds of the button
-//        //stop.addActionListener();
-
-//        // ---- creating the graph from our information ----//
