@@ -1,5 +1,4 @@
-# Ex4
-## Overview:
+# Overview:
 This project is Exercise 4 in the course OOP aka "pokemon game".
 
 This task is about creating a server game, using the Design and implementation of directed and weighted graphs. 
