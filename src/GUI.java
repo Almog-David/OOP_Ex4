@@ -53,7 +53,7 @@ public class GUI extends JPanel {
     public void createMenu(){ // creates the panel that saves all the information for the user
         menu = new JPanel();
         menu.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
-        menu.setPreferredSize(new Dimension(2000,75));
+        menu.setPreferredSize(new Dimension(2000,50));
         menu.setVisible(true);
         time = new JLabel();
         time.setForeground(Color.black);
@@ -78,11 +78,12 @@ public class GUI extends JPanel {
     public void stopButton(){
         stop = new JButton("Stop");
         stop.addActionListener(e -> client.stop());
-        stop.setSize(30,30);
+        stop.setSize(20,20);
         stop.setForeground(null);
         stop.setBackground(Color.red);
-        stop.setFont(new Font("Ariel",Font.PLAIN,30));
-        stop.setBounds(800,20,100,40);
+        stop.setFocusable(false);
+        stop.setFont(new Font("Ariel",Font.PLAIN,20));
+        stop.setBounds(800,20,20,20);
         menu.add(stop,BorderLayout.AFTER_LINE_ENDS);
     }
 
