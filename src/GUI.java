@@ -155,10 +155,15 @@ public class GUI extends JPanel {
             Pokemon pokemon = pokemonIterator.next();
             if (pokemon.getType() > 0) {
                 g.setColor(new Color(200, 200, 0));
-                g.fillOval(getXScale(pokemon.getPos()), getYScale(pokemon.getPos()), 15, 15);
+                Toolkit t=Toolkit.getDefaultToolkit();
+                Image i=t.getImage("src/Pictures/jigglypuff.png");
+                g.drawImage(i,getXScale(pokemon.getPos()), getYScale(pokemon.getPos()), 20, 20,this);
             } else {
                 g.setColor(new Color(200, 80, 0));
-                g.fillOval(getXScale(pokemon.getPos()), getYScale(pokemon.getPos()), 15, 15);
+                Toolkit t=Toolkit.getDefaultToolkit();
+                Image i=t.getImage("src/Pictures/pikachu.png");
+                g.drawImage(i,getXScale(pokemon.getPos()), getYScale(pokemon.getPos()), 20, 20,this);
+
             }
         }
         //---------------- draw the agents ----------------//
@@ -167,7 +172,9 @@ public class GUI extends JPanel {
             HashMap.Entry<Integer, Agent> v = A.next();
             Agent a = v.getValue();
             g.setColor(new Color(200, 0, 0));
-            g.fillOval(getXScale(a.getPos()), getYScale(a.getPos()), 15, 15);
+            Toolkit t=Toolkit.getDefaultToolkit();
+            Image i=t.getImage("src/Pictures/Poké_Ball.png");
+            g.drawImage(i,getXScale(a.getPos()), getYScale(a.getPos()), 20, 20,this);
         }
     }
 

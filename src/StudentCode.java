@@ -69,7 +69,6 @@ public class StudentCode {
                         }
                     }
                 }
-
                 if (AgentID != -1) {
                     if(path.size()>1) {
                         client.chooseNextEdge("{\"agent_id\":" + AgentID + ", \"next_node_id\": " + path.get(1) + "}");
