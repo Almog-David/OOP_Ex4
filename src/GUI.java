@@ -36,12 +36,13 @@ public class GUI extends JPanel {
         frame.setTitle("Ex4 - Pokemon Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//exit the app
         frame.setPreferredSize(new Dimension(600,600));
-        this.setBounds(0,100,frame.getWidth()-50,frame.getHeight()-100);
+        this.setBounds(0,100,frame.getWidth()-50,frame.getHeight());
         frame.getContentPane().addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
             }
         });
         frame.add(this,BorderLayout.CENTER);
+
         this.createMenu();
         frame.repaint();
         frame.setVisible(true); //make frame visible
@@ -51,6 +52,7 @@ public class GUI extends JPanel {
     }
 
     public void createMenu(){ // creates the panel that saves all the information for the user
+
         menu = new JPanel();
         menu.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
         menu.setPreferredSize(new Dimension(2000,50));
@@ -152,10 +154,7 @@ public class GUI extends JPanel {
             }
         }
         //---------------- draw the pokemons ----------------//
-//        Iterator <Pokemon> pokemonIterator = pokemons.iterator();
-//        while (pokemonIterator.hasNext()){
         for(int p=0; p<pokemons.size();p++){
-            //Pokemon pokemon = pokemonIterator.next();
              Pokemon pokemon = pokemons.get(p);
             if (pokemon.getType() > 0) {
                 g.setColor(new Color(200, 200, 0));
@@ -186,10 +185,14 @@ public class GUI extends JPanel {
         this.pokemons = p;
         this.agents = a;
         this.client = c;
-        currtime = this.gettime();
-        currscore = this.getscore();
-        this.time.setText("Countdown :"+currtime);
-        this.score.setText("Score: "+currscore);
+        //currtime = this.gettime();
+        //currscore = this.getscore();
+        this.time.setText("Countdown :"+this.gettime());
+        this.time.paint(this.time.getGraphics());
+        this.score.setText("Score: "+this.getscore());
+        this.score.paint(this.score.getGraphics());
+
+
         this.setBounds(0,100,frame.getWidth(),frame.getHeight()-135);
         repaint();
     }
