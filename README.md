@@ -15,5 +15,5 @@ pip install -r requirements.txt
 ```
 3. Using your preferred IDE/Terminal run the main:
 ```bash
-python path/to/project/src/main.py
+java -jar Ex4_Server_v0.0.jar (enter a number between 0 to 15)
 ```
