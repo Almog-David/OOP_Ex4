@@ -1,64 +1,187 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Queue;
 
-public class GUI {
+public class GUI extends JPanel {
 
-    public static void main() {
-        Client C = new Client();
-        GraphAlgo g = new GraphAlgo();
-        //---- first we need to create the settings of the frame ----//
-        JFrame frame = new JFrame(); // creates a frame
-        frame.setTitle("Ex4 - Pokemon Game"); // sets title of frame
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
-        frame.setSize(600, 600); // sets the x and y dimension of the frame
-        frame.setLayout(new BorderLayout());
-        frame.setVisible(true); // make frame visible
-        frame.getContentPane().setBackground(Color.white); // change the color of the background
-        g.load(C.getGraph());
-        Panel p = new Panel(g.getGraph());
+    private GraphAlgo graph;
+    private Queue<Pokemon> pokemons;
+    private HashMap<Integer, Agent> agents;
+    private Client client;
+    private double maxX;
+    private double maxY;
+    private double minX;
+    private double minY;
+    JFrame frame;
+    JPanel menu;
+    JButton stop;
+    JLabel time;
+    JLabel score;
+    int currtime;
+    int currscore;
 
 
-        // if we would like to change the icon of the program - use lines 20-21
-        ImageIcon image = new ImageIcon("name of image"); // create an ImageIcon
-        frame.setIconImage(image.getImage()); // change icon of frame
-
-        // ---- now we would like to create the objects on the frame ---- //
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.blue);
-        panel.setPreferredSize(new Dimension(50,50));
-        JLabel score = new JLabel("Score:"); // create a label and set the text
-        //score.setHorizontalTextPosition(JLabel.LEFT); // set the x position of the label Left,center,right
-        //score.setVerticalTextPosition(JLabel.CENTER); // set the y position of the label top,center,bottom
-        score.setForeground(Color.darkGray); // sets the color of the label
-        score.setFont(new Font("Ariel", Font.PLAIN, 20)); // sets font of text
-        score.setBounds(15, 150, 350, 350); // set x, y position within frame as well as dimension
-
-        JLabel time = new JLabel("Time:"); // create a label and set the text
-        //time.setHorizontalTextPosition(JLabel.LEFT); // set the x position of the label Left,center,right
-        //time.setVerticalTextPosition(JLabel.CENTER); // set the y position of the label top,center,bottom
-        time.setForeground(Color.darkGray); // sets the color of the label
-        time.setFont(new Font("Ariel", Font.PLAIN, 20)); // sets font of text
-        time.setBounds(15, 300, 350, 350); // set x, y position within frame as well as dimension
-
-        JButton stop = new JButton("Stop Game"); // create a new button
-        stop.setBounds(100, 100, 200, 100); // set the bounds of the button
-        stop.setBackground(Color.red);
-        stop.setForeground(Color.black);
-        stop.setFont(new Font("Ariel", Font.PLAIN,15));
-        stop.setBorder(BorderFactory.createEtchedBorder());
-        stop.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                C.stop();
-                stop.setEnabled(false);
+    public GUI(GraphAlgo g, HashMap<Integer, Agent> a, Queue<Pokemon> p, Client c) {
+        this.graph = g;
+        this.pokemons = p;
+        this.agents = a;
+        this.client = c;
+        setValues();
+        frame = new JFrame();
+        frame.setTitle("Ex4 - Pokemon Game");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//exit the app
+        frame.setPreferredSize(new Dimension(600,600));
+        this.setBounds(0,100,frame.getWidth()-50,frame.getHeight()-100);
+        frame.getContentPane().addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
             }
         });
+        frame.add(this,BorderLayout.CENTER);
+        this.createMenu();
+        frame.repaint();
+        frame.setVisible(true); //make frame visible
+        frame.setLayout(new FlowLayout());//controls the size of things that we are adding(button)
+        frame.getContentPane().setBackground(Color.white);//change the color of background
+        frame.pack();
+    }
 
-        panel.add(stop);
-        panel.add(time);
-        panel.add(score);
-        frame.add(panel,BorderLayout.NORTH);
+    public void createMenu(){ // creates the panel that saves all the information for the user
+        menu = new JPanel();
+        menu.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
+        menu.setPreferredSize(new Dimension(2000,75));
+        menu.setVisible(true);
+        time = new JLabel();
+        time.setForeground(Color.black);
+        time.setBounds(5,20,400,40);
+        time.setVisible(true);
+        score = new JLabel();
+        score.setForeground(Color.black);
+        score.setBounds(300,20,350,40);
+        score.setVisible(true);
+        currtime = this.gettime();
+        currscore = this.getscore();
+        time.setText("Countdown :"+currtime);
+        time.setFont(new Font("Ariel",Font.BOLD,20));
+        score.setText("Score: "+currscore);
+        score.setFont(new Font("Ariel",Font.BOLD,20));
+        menu.add(score);
+        menu.add(time);
+        this.stopButton();
+        frame.add(menu,BorderLayout.NORTH);
+    }
 
+    public void stopButton(){
+        stop = new JButton("Stop");
+        stop.addActionListener(e -> client.stop());
+        stop.setSize(30,30);
+        stop.setForeground(null);
+        stop.setBackground(Color.red);
+        stop.setFont(new Font("Ariel",Font.PLAIN,30));
+        stop.setBounds(800,20,100,40);
+        menu.add(stop,BorderLayout.AFTER_LINE_ENDS);
+    }
+
+    public int gettime(){
+        int time = Integer.parseInt(client.timeToEnd()) / 1000;
+        return time;
+    }
+
+    public int getscore(){
+        String info = client.getInfo();
+        org.json.JSONObject o = new org.json.JSONObject(info);
+        org.json.JSONObject ob = o.getJSONObject("GameServer");
+        int score = ob.getInt("grade");
+        return score;
+    }
+
+    private void setValues() {
+
+        maxX = Integer.MIN_VALUE;
+        maxY = Integer.MIN_VALUE;
+        minX = Integer.MAX_VALUE;
+        minY = Integer.MAX_VALUE;
+
+        Iterator<Node> Iterator = graph.getGraph().getNodes().values().iterator();
+        while ((Iterator.hasNext())) {
+            Node n = Iterator.next();
+            minX = Math.min(n.getLocation().x, minX);
+            minY = Math.min(n.getLocation().y, minY);
+            maxX = Math.max(n.getLocation().x, maxX);
+            maxY = Math.max(n.getLocation().y, maxY);
+        }
+    }
+
+    private int getXScale(Location pos) {
+        return (int) ((((pos.x - minX) / (maxX - minX)) * this.getWidth() * 0.9) + (0.05 * this.getWidth()));
+    }
+
+    private int getYScale(Location pos) {
+        return (int) ((((pos.y - minY) * (this.getHeight() - 100) / (maxY - minY)) * 0.9) + (0.05 * (this.getHeight() - 100)));
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        g.clearRect(0,0,this.getWidth(),this.getHeight()); // repainting the screen
+        setValues(); // define the limits of the graph
+
+        //---------------- draw the nodes ----------------//
+        Iterator<Node> iterator_node = graph.getGraph().getNodes().values().iterator();
+        while (iterator_node.hasNext()) {
+            Node n = iterator_node.next();
+            g.setColor(new Color(20, 150, 100));
+            g.fillOval(getXScale(n.getLocation()), getYScale(n.getLocation()), 15, 15);
+            g.drawString(n.getId() + "", getXScale(n.getLocation()), getYScale(n.getLocation()));
+        }
+        //---------------- draw the edges ----------------//
+        Iterator<Integer> src_edge = graph.getGraph().getOut_edges().keySet().iterator();
+        while (src_edge.hasNext()) {
+            int src = src_edge.next();
+            Iterator<Integer> dest_edge = graph.getGraph().getOut_edges().get(src).keySet().iterator();
+            while (dest_edge.hasNext()) {
+                int dest = dest_edge.next();
+                Node s = graph.getGraph().getNode(src);
+                Node d = graph.getGraph().getNode(dest);
+                g.setColor(Color.BLACK);
+                g.drawLine(getXScale(s.getLocation()) + 8, getYScale(s.getLocation()) + 8, getXScale(d.getLocation()) + 8, getYScale(d.getLocation()) + 8);
+            }
+        }
+        //---------------- draw the pokemons ----------------//
+        Iterator <Pokemon> pokemonIterator = pokemons.iterator();
+        while (pokemonIterator.hasNext()){
+            Pokemon pokemon = pokemonIterator.next();
+            if (pokemon.getType() > 0) {
+                g.setColor(new Color(200, 200, 0));
+                g.fillOval(getXScale(pokemon.getPos()), getYScale(pokemon.getPos()), 15, 15);
+            } else {
+                g.setColor(new Color(200, 80, 0));
+                g.fillOval(getXScale(pokemon.getPos()), getYScale(pokemon.getPos()), 15, 15);
+            }
+        }
+        //---------------- draw the agents ----------------//
+        Iterator<HashMap.Entry<Integer, Agent>> A = agents.entrySet().iterator();
+        while (A.hasNext()) {
+            HashMap.Entry<Integer, Agent> v = A.next();
+            Agent a = v.getValue();
+            g.setColor(new Color(200, 0, 0));
+            g.fillOval(getXScale(a.getPos()), getYScale(a.getPos()), 15, 15);
+        }
+    }
+
+    public void updateGame(HashMap<Integer, Agent> a, Queue<Pokemon> p, Client c) {
+        this.pokemons = p;
+        this.agents = a;
+        this.client = c;
+        currtime = this.gettime();
+        currscore = this.getscore();
+        this.time.setText("Countdown :"+currtime);
+        this.score.setText("Score: "+currscore);
+        this.setBounds(0,100,frame.getWidth(),frame.getHeight()-135);
+        repaint();
     }
 }
+
+

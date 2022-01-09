@@ -25,8 +25,15 @@ public class StudentCode {
         int numofagents = ob.getInt("agents");
 
         int center = graph.center();
-        for (int i = 0; i < numofagents; i++) { // before the first run we would like to put all the agents in the center.
+        if(numofagents==1){
             client.addAgent("{\"id\":" + center + "}");
+        }
+        else {
+            int locate = graph.getGraph().getNodes().size()/numofagents;
+            for (int i = 0; i < numofagents; i++) { // before the first run we would like to put all the agents in the center.
+                int where = (i+1)*locate;
+                client.addAgent("{\"id\":" + where + "}");
+            }
         }
 
         HashMap<Integer, Agent> agents = Agent.load(client.getAgents());
@@ -36,36 +43,43 @@ public class StudentCode {
         pokemons = Pokemon.load(client.getPokemons()); // add the pokemons to a queue because every time we need to add and remove the pokemon if we reach to him
 
         client.start();
-
+        GUI gameGUI = new GUI(graph,agents, pokemons,client); // the first time we draw everything.
         while (client.isRunning().equals("true")) {
             agents = Agent.load(client.getAgents());
             pokemons = Pokemon.load(client.getPokemons());
-            LinkedList path = new LinkedList();
+            gameGUI.updateGame(agents, pokemons,client);
+            LinkedList<Integer> path = new LinkedList();
             double min = Double.MAX_VALUE;
             int AgentID = -1;
-            for (Pokemon p : pokemons) { // we will go through the poekmons we got to see which agents is best for every one.
+            Iterator<Pokemon> pokemonIterator = pokemons.iterator();
+            while (pokemonIterator.hasNext()){
+                Pokemon p = pokemonIterator.next();
                 int[] P_pos = p.findEdge(graph.getGraph());
                 Iterator<HashMap.Entry<Integer, Agent>> A = agents.entrySet().iterator();
                 while (A.hasNext()) {
                     HashMap.Entry<Integer, Agent> v = A.next();
-                    if (v.getValue().isTag() == false && v.getValue().getDest() == -1) {
+                    int agentkey = v.getKey();
+                    if (!agents.get(agentkey).isTag() && agents.get(agentkey).getDest() == -1) {
                         List<Integer> l = graph.shortestPath(v.getValue().getSource(), P_pos[0]); // do the shortest path on it
                         double temp = graph.calculateLength(l) / v.getValue().getSpeed(); // calculate the amount o time it will take him to execute the catch
                         if (temp < min) {
                             min = temp;
                             AgentID = v.getValue().getId();
-                            path = (LinkedList) l;
+                            path = (LinkedList<Integer>) l;
                         }
                     }
                 }
 
                 if (AgentID != -1) {
-                    if(path.size()>1)
+                    if(path.size()>1) {
                         client.chooseNextEdge("{\"agent_id\":" + AgentID + ", \"next_node_id\": " + path.get(1) + "}");
-                    else if(path.size()==1 && agents.get(AgentID).getSource()==  P_pos[0] )
+                        agents.get(AgentID).setTag(true);
+                    }
+                    else if(path.size()==1 && agents.get(AgentID).getSource()==  P_pos[0]) {
                         client.chooseNextEdge("{\"agent_id\":" + AgentID + ", \"next_node_id\": " + P_pos[1] + "}");
+                        agents.get(AgentID).setTag(true);
+                    }
 
-                    agents.get(AgentID).setTag(true);
                 }
 
             }
@@ -76,12 +90,10 @@ public class StudentCode {
             try {
                 thread.sleep(100);
             } catch(InterruptedException e) {
-                if(true==true);
+                if(true);
             }
 
             client.move();
-
-
         }
     }
 }
