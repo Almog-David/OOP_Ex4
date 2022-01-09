@@ -41,7 +41,7 @@ public class Pokemon {
 
     public void setCaptured(boolean captured) {this.captured = captured;}
 
-    public static Queue<Pokemon> load(String file) {
+    public static LinkedList<Pokemon> load(String file) {
         LinkedList<Pokemon> pokemons = new LinkedList<>();
         org.json.JSONObject o = new org.json.JSONObject(file);
         org.json.JSONArray pk = o.getJSONArray("Pokemons");
@@ -62,7 +62,7 @@ public class Pokemon {
 
 
     public int [] findEdge(Graph g) {
-        double epsilon = 0.00000001;
+        double epsilon = 0.000000009;
         Location C = this.pos; // The pokemon Location
         int[] ans = new int[2];
         for (HashMap.Entry<Integer, Node> s : g.getNodes().entrySet()) {
@@ -81,7 +81,7 @@ public class Pokemon {
                 double ap=distance(A, C);
                 double pb=distance(C,B);
                 double pokedistance=ap+pb;
-                if (C.y - m*C.x - n < epsilon  && -1* epsilon < C.y - m*C.x - n ||Math.abs(pokedistance-ab)<=epsilon) {
+                if (Math.abs(pokedistance-ab)<=epsilon || C.y - m*C.x - n < epsilon  && -1* epsilon < C.y - m*C.x - n) {
                     if (this.type < 0 && first.getId() - second.getId() > 0) // if the source is bigger than the dest - the pokemon type is -1
                         ans = new int[]{first.getId(), second.getId()};
                     if (this.type > 0 && first.getId() - second.getId() < 0) // if the dest is bigger than the source - the pokemon type is 1

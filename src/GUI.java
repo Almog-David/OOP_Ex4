@@ -4,12 +4,13 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class GUI extends JPanel {
 
     private GraphAlgo graph;
-    private Queue<Pokemon> pokemons;
+    private LinkedList<Pokemon> pokemons;
     private HashMap<Integer, Agent> agents;
     private Client client;
     private double maxX;
@@ -25,7 +26,7 @@ public class GUI extends JPanel {
     int currscore;
 
 
-    public GUI(GraphAlgo g, HashMap<Integer, Agent> a, Queue<Pokemon> p, Client c) {
+    public GUI(GraphAlgo g, HashMap<Integer, Agent> a, LinkedList<Pokemon> p, Client c) {
         this.graph = g;
         this.pokemons = p;
         this.agents = a;
@@ -150,9 +151,11 @@ public class GUI extends JPanel {
             }
         }
         //---------------- draw the pokemons ----------------//
-        Iterator <Pokemon> pokemonIterator = pokemons.iterator();
-        while (pokemonIterator.hasNext()){
-            Pokemon pokemon = pokemonIterator.next();
+//        Iterator <Pokemon> pokemonIterator = pokemons.iterator();
+//        while (pokemonIterator.hasNext()){
+        for(int p=0; p<pokemons.size();p++){
+            //Pokemon pokemon = pokemonIterator.next();
+             Pokemon pokemon = pokemons.get(p);
             if (pokemon.getType() > 0) {
                 g.setColor(new Color(200, 200, 0));
                 Toolkit t=Toolkit.getDefaultToolkit();
@@ -178,7 +181,7 @@ public class GUI extends JPanel {
         }
     }
 
-    public void updateGame(HashMap<Integer, Agent> a, Queue<Pokemon> p, Client c) {
+    public void updateGame(HashMap<Integer, Agent> a, LinkedList<Pokemon> p, Client c) {
         this.pokemons = p;
         this.agents = a;
         this.client = c;
