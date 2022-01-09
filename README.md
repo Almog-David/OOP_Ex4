@@ -9,11 +9,7 @@ This task is about creating a server game, using the Design and implementation o
 ```bash
 git clone https://github.com/Almog-David/OOP_Ex4.git
 ```
-2. Install the dependencies:
-```bash
-pip install -r requirements.txt
-```
-3. Using your preferred IDE/Terminal run the main:
+2. Using your preferred IDE/Terminal run the main:
 ```bash
 java -jar Ex4_Server_v0.0.jar (enter a number between 0 to 15)
 ```
