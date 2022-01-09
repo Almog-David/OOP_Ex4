@@ -109,19 +109,19 @@ public class GUI extends JPanel {
         Iterator<Node> Iterator = graph.getGraph().getNodes().values().iterator();
         while ((Iterator.hasNext())) {
             Node n = Iterator.next();
-            minX = Math.min(n.getLocation().x, minX);
-            minY = Math.min(n.getLocation().y, minY);
-            maxX = Math.max(n.getLocation().x, maxX);
-            maxY = Math.max(n.getLocation().y, maxY);
+            minX = Math.min(n.getLocation().getX(), minX);
+            minY = Math.min(n.getLocation().getY(), minY);
+            maxX = Math.max(n.getLocation().getX(), maxX);
+            maxY = Math.max(n.getLocation().getY(), maxY);
         }
     }
 
     private int getXScale(Location pos) {
-        return (int) ((((pos.x - minX) / (maxX - minX)) * this.getWidth() * 0.9) + (0.05 * this.getWidth()));
+        return (int) ((((pos.getX() - minX) / (maxX - minX)) * this.getWidth() * 0.9) + (0.05 * this.getWidth()));
     }
 
     private int getYScale(Location pos) {
-        return (int) ((((pos.y - minY) * (this.getHeight() - 100) / (maxY - minY)) * 0.9) + (0.05 * (this.getHeight() - 100)));
+        return (int) ((((pos.getY() - minY) * (this.getHeight() - 100) / (maxY - minY)) * 0.9) + (0.05 * (this.getHeight() - 100)));
     }
 
     @Override

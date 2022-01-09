@@ -81,7 +81,7 @@ public class Pokemon {
                 double ap=distance(A, C);
                 double pb=distance(C,B);
                 double pokedistance=ap+pb;
-                if (Math.abs(pokedistance-ab)<=epsilon || C.y - m*C.x - n < epsilon  && -1* epsilon < C.y - m*C.x - n) {
+                if (Math.abs(pokedistance-ab)<=epsilon || C.getY() - m*C.getX() - n < epsilon  && -1* epsilon < C.getY() - m*C.getX() - n) {
                     if (this.type < 0 && first.getId() - second.getId() > 0) // if the source is bigger than the dest - the pokemon type is -1
                         ans = new int[]{first.getId(), second.getId()};
                     if (this.type > 0 && first.getId() - second.getId() < 0) // if the dest is bigger than the source - the pokemon type is 1

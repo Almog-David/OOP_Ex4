@@ -46,7 +46,7 @@ class GraphTest {
         Node ans = graph.getNode(1);
         assertEquals(node1.getWeight(), ans.getWeight());
         assertEquals(node1.getId(), ans.getId());
-        assertEquals(node1.getLocation().y, ans.getLocation().y);
+        assertEquals(node1.getLocation().getY(), ans.getLocation().getY());
         Node ans2 = graph.getNode(5);
         assertEquals(null,ans2);
     }

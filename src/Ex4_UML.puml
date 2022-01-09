@@ -1,0 +1,85 @@
+@startuml
+'https://plantuml.com/class-diagram
+class Node{
+- int id
+- double weight
+- int tag
+- Location location
+}
+class Graph{
+- HashMap<Integer,Node> nodes
+- HashMap<Integer,HashMap<Integer,Double>> out_edges
+- HashMap<Integer, HashMap<Integer, Double>> in_edges
+- int counter
++ public Node getNode(int key)
++  public double getEdge (int src, int dest)
++ public void addNode(int id, Location location)
++ public void addEdge(int src, int dest, double w)
++public void removeNode(int id)
++ public void removeEdge(int src, int dest)
+}
+class GraphAlgo{
+- Graph graph
++ public boolean save(String file)
++ public boolean load(String file)
++ public List<Integer> shortestPath(int src, int dest)
++ public double calculateLength(List<Integer> l)
++ public int center()
+- private HashMap<Integer,Node> Dijkstra(int src)
+- private boolean relax(int src, int dest)
+- private void reset()
++ public List<Integer> tsp(List<Integer> cities)
+
+}
+class Location{
+- double x
+- double y
+- double z
+}
+class Pokemon{
+- double value
+- int type
+- Location pos
+- boolean captured
++ public static LinkedList<Pokemon> load(String file)
++ public int [] findEdge(Graph g)
++ public double distance(Location f,Location s)
+}
+class Agent{
+- int id
+- double value
+- int source
+- int dest
+- double speed
+- Location pos
+- boolean tag
++ public static HashMap<Integer,Agent> load(String file)
+
+}
+class MyThread{
++ public void run()
+}
+class Client{}
+class StudentCode{}
+class GUI{}
+
+
+
+
+GraphAlgo -left-> Graph
+Graph -left-> Node
+Node -left-> Location
+StudentCode -down-> GraphAlgo
+
+Pokemon -DOWN-> Location
+Agent -DOWN-> Location
+StudentCode -left-> Agent
+StudentCode -left-> Pokemon
+StudentCode -up-> MyThread
+Client -LEFT-> StudentCode
+StudentCode -up-> GUI
+
+
+
+
+@enduml

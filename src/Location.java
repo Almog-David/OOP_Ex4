@@ -1,7 +1,7 @@
 public class Location {
-    public double x;
-    public double y;
-    public double z;
+    private double x;
+    private double y;
+    private double z;
 
     public Location() {
         this.x = 0;
